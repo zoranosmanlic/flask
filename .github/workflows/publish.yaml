@@ -18,14 +18,32 @@ jobs:
       - run: pip install -r requirements/build.txt
       # Use the commit date instead of the current date during the build.
       - run: echo "SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)" >> $GITHUB_ENV
-      - run: python -m build
+      - run: |
+          python -m build
+          echo "scanfile=$(ls dist/*.whl)" >> $GITHUB_OUTPUT
+      - name: Scan build artifact on the Portal
+        id: rl-scan
+        env:
+          RLPORTAL_ACCESS_TOKEN: ${{ secrets.RLPORTAL_ACCESS_TOKEN }}
+        uses: reversinglabs/gh-action-rl-scanner-cloud-only@v1
+        with:
+          artifact-to-scan: ${{ needs.build.outputs.scanfile }}
+          rl-verbose: true
+          rl-portal-server: trial
+          rl-portal-org: Trial
+          rl-portal-group: slsa-demo
+          rl-package-url: testing/flask@1.0
+      - name: report the scan status
+        if: success() || failure()
+        run: |
+          echo "The status is: '${{ steps.rl-scan.outputs.status }}'"
+          echo "The description is: '${{ steps.rl-scan.outputs.description }}'"
+
       # Generate hashes used for provenance.
       - name: generate hash 
         id: hash
         run: |
-          cd dist 
-          echo "hash=$(sha256sum * | base64 -w0)" >> $GITHUB_OUTPUT
-          echo "scanfile=$(ls *.whl)" >> $GITHUB_OUTPUT
+          cd dist && echo "hash=$(sha256sum * | base64 -w0)" >> $GITHUB_OUTPUT
       - uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         with:
           path: ./dist
@@ -39,32 +57,7 @@ jobs:
     # Can't pin with hash due to how this workflow works.
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.0.0
     with:
-      base64-subjects: ${{ needs.build.outputs.hash }}
-
-  rl-secure-scan:
-    runs-on: ubuntu-latest
-    needs: [build, create-release]
-    permissions:
-      contents: write
-    steps:  
-      - name: Scan build artifact on the Portal
-        id: rl-scan
-        env:
-          RLPORTAL_ACCESS_TOKEN: ${{ secrets.RLPORTAL_ACCESS_TOKEN }}
-        uses: reversinglabs/gh-action-rl-scanner-cloud-only@v1
-        with:
-          artifact-to-scan: ${{ needs.build.outputs.scanfile }}
-          rl-verbose: true
-          rl-portal-server: trial
-          rl-portal-org: Trial
-          rl-portal-group: slsa-demo
-          rl-package-url: testing/flask@1.0
-
-      - name: report the scan status
-        if: success() || failure()
-        run: |
-          echo "The status is: '${{ steps.rl-scan.outputs.status }}'"
-          echo "The description is: '${{ steps.rl-scan.outputs.description }}'"
+      base64-subjects: ${{ needs.build.outputs.hash }}      
 
   create-release:
     # Upload the sdist, wheels, and provenance to a GitHub release. They remain
