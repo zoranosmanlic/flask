@@ -21,13 +21,14 @@ jobs:
       - run: |
           python -m build
           echo "scanfile=$(ls dist/*.whl)" >> $GITHUB_OUTPUT
+          ls -l dist/
       - name: Scan build artifact on the Portal
         id: rl-scan
         env:
           RLPORTAL_ACCESS_TOKEN: ${{ secrets.RLPORTAL_ACCESS_TOKEN }}
         uses: reversinglabs/gh-action-rl-scanner-cloud-only@v1
         with:
-          artifact-to-scan: ${{ needs.build.outputs.scanfile }}
+          artifact-to-scan: dist/*.whl
           rl-verbose: true
           rl-portal-server: trial
           rl-portal-org: Trial
