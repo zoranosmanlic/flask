@@ -33,7 +33,7 @@ jobs:
           rl-portal-server: trial
           rl-portal-org: Trial
           rl-portal-group: slsa-demo
-          rl-package-url: testing/flask@1.0
+          rl-package-url: slsa-demo/flask@1.0
       - name: report the scan status
         if: success() || failure()
         run: |
