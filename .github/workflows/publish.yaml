@@ -72,7 +72,7 @@ jobs:
       - uses: actions/download-artifact@9c19ed7fe5d278cd354c7dfd5d3b88589c7e2395 # v4.1.6
       - name: create release
         run: >
-          gh release create --draft --repo ${{ github.repository }}
+          gh release create --repo ${{ github.repository }}
           ${{ github.ref_name }}
           *.intoto.jsonl/* artifact/*
         env:
