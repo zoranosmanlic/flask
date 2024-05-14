@@ -92,7 +92,7 @@ jobs:
           --provenance-path multiple.intoto.jsonl/multiple.intoto.jsonl \
           --source-uri github.com/zoranosmanlic/flask \
           --source-tag ${{ github.ref_name }} \
-          artifact/flask-*.tar.gz >> $GITHUB_STEP_SUMMARY
+          artifact/flask-*.tar.gz
       - name: report the provenance status
         if: always()
         run: |
