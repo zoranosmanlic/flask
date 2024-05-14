@@ -83,19 +83,18 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
-  #verify-provenance:
-  #  needs: [create-release]
-  #  permissions:
-  #    actions: read
-  #    id-token: read
-  #    contents: read
-  #  steps:
-  #    - uses: slsa-framework/slsa-verifier/actions/installer@v2.5.1
-  #    - run: |
-  #        slsa-verifier verify-artifact \
-  #        --provenance-path /dist/multiple.intoto.jsonl \
-  #        --source-uri ${{ github.repository }} \
-  #        --source-tag ${{ github.ref_name }}-release
-
+  verify-provenance:
+    needs: [create-release]
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      id-token: read
+      contents: read
+    steps:
+      - uses: actions/download-artifact@9c19ed7fe5d278cd354c7dfd5d3b88589c7e2395 # v4.1.6
+      - uses: slsa-framework/slsa-verifier/actions/installer@v2.5.1
+      - run: |
+          ls -l
+          ls -l dist/
 
     
