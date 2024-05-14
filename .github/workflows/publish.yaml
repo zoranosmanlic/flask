@@ -21,7 +21,7 @@ jobs:
       - id: build
         run: |
           python -m build
-          echo "scanfile=$(ls dist/*.whl)" >> $GITHUB_OUTPUT
+          echo "scanfile=$(ls dist/*.tar.gz)" >> $GITHUB_OUTPUT
           ls -l dist/
       - name: Scan build artifact on the Portal
         id: rl-scan
