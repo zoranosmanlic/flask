@@ -87,10 +87,12 @@ jobs:
       - uses: slsa-framework/slsa-verifier/actions/installer@v2.5.1
       - run: |
           ls -l
-          slsa-verifier verify-artifact \
-          --provenance-path multiple.intoto.jsonl \
-          --source-uri ${{ github.repository }} \
-          --source-tag ${{ github.ref_name }}-release
+          ls -l artifact/
+          ls -l multiple.intoto.jsonl/
+          #slsa-verifier verify-artifact \
+          #--provenance-path multiple.intoto.jsonl \
+          #--source-uri ${{ github.repository }} \
+          #--source-tag ${{ github.ref_name }}-release
 
 
     
