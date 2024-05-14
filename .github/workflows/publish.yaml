@@ -52,15 +52,19 @@ jobs:
           path: ./dist
   
   provenance:
+    runs-on: ubuntu-latest
     needs: [build]
     permissions:
       actions: read
       id-token: write
       contents: write
-    # Can't pin with hash due to how this workflow works.
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.0.0
-    with:
-      base64-subjects: ${{ needs.build.outputs.hash }}      
+    steps:
+    - name: generate provenance
+      id: generate-provenance
+      # Can't pin with hash due to how this workflow works.
+      uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.0.0
+      with:
+        base64-subjects: ${{ needs.build.outputs.hash }}  
 
   create-release:
     # Upload the sdist, wheels, and provenance to a GitHub release. They remain
@@ -78,3 +82,20 @@ jobs:
           *.intoto.jsonl/* artifact/*
         env:
           GH_TOKEN: ${{ github.token }}
+
+  #verify-provenance:
+  #  needs: [create-release]
+  #  permissions:
+  #    actions: read
+  #    id-token: read
+  #    contents: read
+  #  steps:
+  #    - uses: slsa-framework/slsa-verifier/actions/installer@v2.5.1
+  #    - run: |
+  #        slsa-verifier verify-artifact \
+  #        --provenance-path /dist/multiple.intoto.jsonl \
+  #        --source-uri ${{ github.repository }} \
+  #        --source-tag ${{ github.ref_name }}-release
+
+
+    
