@@ -74,7 +74,7 @@ jobs:
       - name: create release
         run: >
           gh release create --repo ${{ github.repository }}
-          ${{ github.ref_name }}
+          ${{ github.ref_name }}-release
           *.intoto.jsonl/* artifact/*
         env:
           GH_TOKEN: ${{ github.token }}
