@@ -92,11 +92,15 @@ jobs:
           --provenance-path multiple.intoto.jsonl/multiple.intoto.jsonl \
           --source-uri github.com/zoranosmanlic/flask \
           --source-tag ${{ github.ref_name }} \
-          artifact/flask-3.6.0.tar.gz >> $GITHUB_STEP_SUMMARY
+          artifact/flask-${{ github.ref_name }}.tar.gz >> $GITHUB_STEP_SUMMARY
       - name: report the provenance status
-        if: success()
+        if: always()
         run: |
-          echo "Provenance status is: 'success'" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ job.status }}" == "failure" ]]; then
+            echo "Provenance verification failed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Provenance verification succeeded" >> $GITHUB_STEP_SUMMARY
+          fi
 
 
 
