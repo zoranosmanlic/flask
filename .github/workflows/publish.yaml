@@ -91,7 +91,7 @@ jobs:
           ls -l multiple.intoto.jsonl/
           slsa-verifier verify-artifact \
           --provenance-path multiple.intoto.jsonl/multiple.intoto.jsonl \
-          --source-uri ${{ github.repository }} \
+          --source-uri github.com/zoranosmanlic/flask \
           --source-tag ${{ github.ref_name }}-release \
           artifact/flask-3.6.0.tar.gz
 
