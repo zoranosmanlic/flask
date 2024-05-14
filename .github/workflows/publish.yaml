@@ -39,8 +39,8 @@ jobs:
       - name: report the scan status
         if: success() || failure()
         run: |
-          echo "The status is: '${{ steps.rl-scan.outputs.status }}'"
-          echo "The description is: '${{ steps.rl-scan.outputs.description }}'"
+          echo "Spectra Assure status is: '${{ steps.rl-scan.outputs.status }}'"
+          echo "Spectra Assure is: '${{ steps.rl-scan.outputs.description }}'"
 
       # Generate hashes used for provenance.
       - name: generate hash 
@@ -86,12 +86,15 @@ jobs:
       - uses: actions/download-artifact@9c19ed7fe5d278cd354c7dfd5d3b88589c7e2395 # v4.1.6
       - uses: slsa-framework/slsa-verifier/actions/installer@v2.5.1
       - name: Verify provenance
+        id: verify-provenance
         run: |
           slsa-verifier verify-artifact \
           --provenance-path multiple.intoto.jsonl/multiple.intoto.jsonl \
           --source-uri github.com/zoranosmanlic/flask \
           --source-tag ${{ github.ref_name }} \
           artifact/flask-3.6.0.tar.gz
+          echo "Provenance status is: '${{ steps.verify-provenance.outputs.status }}'"
+          echo "Provenance description is: '${{ steps.verify-provenance.outputs.description }}'"
 
 
     
