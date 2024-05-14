@@ -18,7 +18,8 @@ jobs:
       - run: pip install -r requirements/build.txt
       # Use the commit date instead of the current date during the build.
       - run: echo "SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)" >> $GITHUB_ENV
-      - run: |
+      - id: build
+        run: |
           python -m build
           echo "scanfile=$(ls dist/*.whl)" >> $GITHUB_OUTPUT
           ls -l dist/
@@ -28,7 +29,7 @@ jobs:
           RLPORTAL_ACCESS_TOKEN: ${{ secrets.RLPORTAL_ACCESS_TOKEN }}
         uses: reversinglabs/gh-action-rl-scanner-cloud-only@v1
         with:
-          artifact-to-scan: dist/flask-3.5.0-py3-none-any.whl
+          artifact-to-scan: ${{ steps.build.outputs.scanfile }}
           rl-verbose: true
           rl-portal-server: trial
           rl-portal-org: Trial
