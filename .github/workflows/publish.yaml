@@ -40,6 +40,7 @@ jobs:
         if: success() || failure()
         run: |
           echo "Spectra Assure status is: '${{ steps.rl-scan.outputs.status }}'" >> $GITHUB_STEP_SUMMARY
+          echo "Spectra Assure link: https://trial.secure.software/projects/group/d7e45514-e0e5-492e-9deb-96277b7c9198/project/cd2a62fd-1bf0-4c68-9eee-41290edf322f/package/63c0d7e5-5424-4ee1-829c-2af96797ef39" >> $GITHUB_STEP_SUMMARY
           echo "Spectra Assure is: '${{ steps.rl-scan.outputs.description }}'"
 
       # Generate hashes used for provenance.
