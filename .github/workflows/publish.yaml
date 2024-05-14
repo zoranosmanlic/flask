@@ -82,10 +82,6 @@ jobs:
   verify-provenance:
     needs: [create-release]
     runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      id-token: read
-      contents: read
     steps:
       - uses: actions/download-artifact@9c19ed7fe5d278cd354c7dfd5d3b88589c7e2395 # v4.1.6
       - uses: slsa-framework/slsa-verifier/actions/installer@v2.5.1
