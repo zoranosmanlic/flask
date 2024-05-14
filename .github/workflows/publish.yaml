@@ -85,14 +85,12 @@ jobs:
     steps:
       - uses: actions/download-artifact@9c19ed7fe5d278cd354c7dfd5d3b88589c7e2395 # v4.1.6
       - uses: slsa-framework/slsa-verifier/actions/installer@v2.5.1
-      - run: |
-          ls -l
-          ls -l artifact/
-          ls -l multiple.intoto.jsonl/
+      - name: Verify provenance
+        run: |
           slsa-verifier verify-artifact \
           --provenance-path multiple.intoto.jsonl/multiple.intoto.jsonl \
           --source-uri github.com/zoranosmanlic/flask \
-          --source-tag ${{ github.ref_name }}-release \
+          --source-tag ${{ github.ref_name }} \
           artifact/flask-3.6.0.tar.gz
 
 
