@@ -39,8 +39,8 @@ jobs:
       - name: report the scan status
         if: success() || failure()
         run: |
-          echo "Spectra Assure status is: '${{ steps.rl-scan.outputs.status }}'"
-          echo "Spectra Assure is: '${{ steps.rl-scan.outputs.description }}'"
+          echo "Spectra Assure status is: '${{ steps.rl-scan.outputs.status }}'" >> $GITHUB_STEP_SUMMARY
+          echo "Spectra Assure is: '${{ steps.rl-scan.outputs.description }}'" >> $GITHUB_STEP_SUMMARY
 
       # Generate hashes used for provenance.
       - name: generate hash 
@@ -93,8 +93,8 @@ jobs:
           --source-uri github.com/zoranosmanlic/flask \
           --source-tag ${{ github.ref_name }} \
           artifact/flask-3.6.0.tar.gz
-          echo "Provenance status is: '${{ steps.verify-provenance.outputs.status }}'"
-          echo "Provenance description is: '${{ steps.verify-provenance.outputs.description }}'"
+          echo "Provenance status is: '${{ steps.verify-provenance.outputs.status }}'" >> $GITHUB_STEP_SUMMARY
+          echo "Provenance description is: '${{ steps.verify-provenance.outputs.description }}'" >> $GITHUB_STEP_SUMMARY
 
 
     
