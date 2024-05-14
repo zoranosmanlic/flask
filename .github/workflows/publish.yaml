@@ -52,19 +52,15 @@ jobs:
           path: ./dist
   
   provenance:
-    runs-on: ubuntu-latest
     needs: [build]
     permissions:
       actions: read
       id-token: write
       contents: write
-    steps:
-    - name: generate provenance
-      id: generate-provenance
-      # Can't pin with hash due to how this workflow works.
-      uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.0.0
-      with:
-        base64-subjects: ${{ needs.build.outputs.hash }}  
+    # Can't pin with hash due to how this workflow works.
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.0.0
+    with:
+      base64-subjects: ${{ needs.build.outputs.hash }}  
 
   create-release:
     # Upload the sdist, wheels, and provenance to a GitHub release. They remain
@@ -96,5 +92,6 @@ jobs:
       - run: |
           ls -l
           ls -l dist/
+
 
     
